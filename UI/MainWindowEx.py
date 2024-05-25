@@ -1,69 +1,46 @@
 import sys
 import os
-from PyQt6.QtWidgets import QApplication, QMainWindow, QMessageBox
-from PyQt6.QtSql import QSqlDatabase, QSqlQuery
+from PyQt6.QtWidgets import QApplication, QMainWindow, QMessageBox, QComboBox
+from PyQt6.QtSql import QSqlDatabase
+
+from UI import MainWindow
 from UI.MainWindow import Ui_MainWindow
 from UI.SearchResultsEx import SearchResultsEx
+from Filter_based import FilterRecommender
 
 
 class MainWindowEx(QMainWindow, Ui_MainWindow):
     def __init__(self):
         super().__init__()
-        self.setupUi(self)
-
-        # Kết nối nút Submit và Back với các hàm xử lý sự kiện
+        super().setupUi(self)
+        # Connect buttons to their event handlers
         self.pushButtonSubmit.clicked.connect(self.openSearchResults)
         self.pushButtonClose.clicked.connect(self.close)
+        for combo_box in self.findChildren(QComboBox):
+            combo_box.activated.connect(self.updateSelectedValues)
 
-        # Khởi tạo và kết nối cơ sở dữ liệu
-        self.loadDatabase()
-
-        # Tải dữ liệu cho các ComboBox
-        self.loadCities()
-        self.loadRoomTypes()
-        self.loadAmenities()
-
-    def loadDatabase(self):
-        baseDir = os.path.dirname(__file__)
-        databasePath = os.path.join(baseDir, "airbnb_data.db")
-        self.db = QSqlDatabase.addDatabase("QSQLITE")
-        self.db.setDatabaseName(databasePath)
-        if not self.db.open():
-            QMessageBox.critical(
-                self, "Error", "Failed to open database!", QMessageBox.StandardButton.Ok
-            )
-            return False
-        return True
-
-    def loadAmenities(self):
-        amenities = ["Smoke alarm", "Kitchen", "Essentials", "Wifi", "Carbon monoxide alarm",
-                     "Hot water", "Hangers", "Hair dryer", "Dishes and silverware", "Microwave"]
-        self.cbxAmenities.addItems(amenities)
-
-    def loadCities(self):
-        city = ["New Jersey", "Washington DC", "Seattle",
-                "Chicago", "Texas", "Boston", "San Diego", "Dallas"]
-        self.cbxCity.addItems(city)
-
-    def loadRoomTypes(self):
-        roomtype = ["Private room", "Entire home/apt", "Hotel room", "Shared room"]
-        self.cbxRoomtype.addItems(roomtype)
-
+    def updateSelectedValues(self):
+        sender_combobox = self.sender()
+        if sender_combobox.objectName() == "cbxCity":
+            self.selected_city = sender_combobox.currentText()
+        elif sender_combobox.objectName() == "cbxRoomtype":
+            self.selected_roomtype = sender_combobox.currentText()
+        elif sender_combobox.objectName() == "cbxAmenities":
+            self.selected_amenities = sender_combobox.currentText()
     def openSearchResults(self):
-        city = self.cbxCity.currentText()
-        room_type = self.cbxRoomtype.currentText()
-        date = self.lineEditDate.text()
-        amenities = self.cbxAmenities.currentText()
-        price_from = self.lineEditFrom.text()
-        price_to = self.lineEditTo.text()
+        print(f"Opening search results for city: {self.selected_city}")
+        city=self.selected_city
+        roomtype=self.selected_roomtype
+        amenities=self.selected_amenities
+        print(city)
+        print(roomtype)
+        print(amenities)
+
+        ct = FilterRecommender("airbnb_data.db")
+        result = ct.city_based(self.selected_city)
+        print(f"FilterRecommender result: {result}")
 
         window = QMainWindow()
         self.chartUI = SearchResultsEx()
-        # self.chartUI = SearchResultsEx(self.db, city, room_type, date, amenities, price_from, price_to)
         self.chartUI.setupUi(window)
-        self.chartUI.show()
-
-
-
-
-
+        window.show()

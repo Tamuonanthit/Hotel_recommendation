@@ -24,7 +24,7 @@
       <x>20</x>
       <y>20</y>
       <width>761</width>
-      <height>111</height>
+      <height>114</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -78,7 +78,7 @@
      </font>
     </property>
     <property name="text">
-     <string>Date:</string>
+     <string>Days:</string>
     </property>
    </widget>
    <widget class="QLabel" name="Amenities">
@@ -184,6 +184,16 @@
       <height>21</height>
      </rect>
     </property>
+    <item>
+     <property name="text">
+      <string>Wifi</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Air conditioning</string>
+     </property>
+    </item>
    </widget>
    <widget class="QComboBox" name="cbxRoomtype">
     <property name="geometry">
@@ -242,6 +252,22 @@
       <height>21</height>
      </rect>
     </property>
+    <property name="editable">
+     <bool>false</bool>
+    </property>
+    <property name="minimumContentsLength">
+     <number>0</number>
+    </property>
+    <item>
+     <property name="text">
+      <string>Washington DC</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>New Jersey </string>
+     </property>
+    </item>
    </widget>
    <widget class="QLabel" name="City">
     <property name="geometry">
@@ -311,6 +337,9 @@
       <pointsize>10</pointsize>
      </font>
     </property>
+    <property name="text">
+     <string/>
+    </property>
    </widget>
    <widget class="QLineEdit" name="lineEditTo">
     <property name="geometry">
@@ -326,8 +355,11 @@
       <pointsize>10</pointsize>
      </font>
     </property>
+    <property name="text">
+     <string/>
+    </property>
    </widget>
-   <widget class="QLineEdit" name="lineEditDate">
+   <widget class="QLineEdit" name="lineEditDays">
     <property name="geometry">
      <rect>
       <x>20</x>
@@ -341,6 +373,9 @@
       <pointsize>10</pointsize>
      </font>
     </property>
+    <property name="text">
+     <string/>
+    </property>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -349,7 +384,7 @@
      <x>0</x>
      <y>0</y>
      <width>797</width>
-     <height>18</height>
+     <height>26</height>
     </rect>
    </property>
   </widget>

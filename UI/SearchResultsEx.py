@@ -21,49 +21,20 @@ class SearchResultsEx(QMainWindow, Ui_MainWindow):
 
         # self.populateResults()
 
-    def loadDatabase(self):
-        baseDir = os.path.dirname(__file__)
-        databasePath = os.path.join(baseDir, "airbnb_data.db")
-        self.db = QSqlDatabase.addDatabase("QSQLITE")
-        self.db.setDatabaseName(databasePath)
-        if not self.db.open():
-            QMessageBox.critical(
-                self, "Error", "Failed to open database!", QMessageBox.StandardButton.Ok
-            )
-            return False
-        return True
+    def showDataIntoTableWidget(self, df):
+        self.tableWidget.setRowCount(0)
+        self.tableWidget.setColumnCount(len(df.columns))
+        for i in range(len(df.columns)):
+            columnHeader = df.columns[i]
+            self.tableWidget.setHorizontalHeaderItem(i, QTableWidgetItem(columnHeader))
+        row = 0
+        for item in df.iloc:
+            arr = item.values.tolist()
+            self.tableWidget.insertRow(row)
+            j = 0
+            for data in arr:
+                self.tableWidget.setItem(row, j, QTableWidgetItem(str(data)))
+                j = j + 1
+            row = row + 1
 
-    # def populateResults(self):
-    #     query_str = """
-    #     SELECT name, listing_url, price, review_scores_rating
-    #     FROM airbnb_data
-    #     WHERE city = ?
-    #     AND room_type = ?
-    #     AND amenities LIKE ?
-    #     AND price BETWEEN ? AND ?
-    #     AND julianday('now') < julianday(available_date) + (maximum_nights - minimum_nights)
-    #     """
-    #     query = QSqlQuery(self.db)
-    #     query.prepare(query_str)
-    #     query.addBindValue(self.city)
-    #     query.addBindValue(self.room_type)
-    #     query.addBindValue(f'%{self.amenities}%')
-    #     query.addBindValue(self.price_from)
-    #     query.addBindValue(self.price_to)
-    #
-    #     if not query.exec():
-    #         print("Failed to execute query:", query.lastError().text())
-    #         return
-    #
-    #     self.ui.tableWidget.setColumnCount(4)
-    #     self.ui.tableWidget.setHorizontalHeaderLabels(['Name', 'Link URL', 'Price', 'Rate'])
-
-    #     row = 0
-    #     while query.next():
-    #         self.ui.tableWidget.insertRow(row)
-    #         self.ui.tableWidget.setItem(row, 0, QTableWidgetItem(query.value(0)))
-    #         self.ui.tableWidget.setItem(row, 1, QTableWidgetItem(query.value(1)))
-    #         self.ui.tableWidget.setItem(row, 2, QTableWidgetItem(query.value(2)))
-    #         self.ui.tableWidget.setItem(row, 3, QTableWidgetItem(query.value(3)))
-    #         row += 1
 
