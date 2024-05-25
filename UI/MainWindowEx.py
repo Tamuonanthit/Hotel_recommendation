@@ -8,7 +8,6 @@ from UI.MainWindow import Ui_MainWindow
 from UI.SearchResultsEx import SearchResultsEx
 
 
-
 class MainWindowEx(QMainWindow, Ui_MainWindow):
     def __init__(self):
         super().__init__()
