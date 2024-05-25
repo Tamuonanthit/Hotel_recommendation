@@ -6,41 +6,58 @@ from PyQt6.QtSql import QSqlDatabase
 from UI import MainWindow
 from UI.MainWindow import Ui_MainWindow
 from UI.SearchResultsEx import SearchResultsEx
-from Filter_based import FilterRecommender
+
 
 
 class MainWindowEx(QMainWindow, Ui_MainWindow):
     def __init__(self):
         super().__init__()
-        super().setupUi(self)
+        self.setupUi(self)
         # Connect buttons to their event handlers
         self.pushButtonSubmit.clicked.connect(self.openSearchResults)
         self.pushButtonClose.clicked.connect(self.close)
+
+        self.selected_city = None
+        self.selected_roomtype = None
+        self.selected_amenities = None
+
         for combo_box in self.findChildren(QComboBox):
-            combo_box.activated.connect(self.updateSelectedValues)
+            combo_box.activated.connect(self.updateSelectedCombo)
 
-    def updateSelectedValues(self):
-        sender_combobox = self.sender()
-        if sender_combobox.objectName() == "cbxCity":
-            self.selected_city = sender_combobox.currentText()
-        elif sender_combobox.objectName() == "cbxRoomtype":
-            self.selected_roomtype = sender_combobox.currentText()
-        elif sender_combobox.objectName() == "cbxAmenities":
-            self.selected_amenities = sender_combobox.currentText()
+        self.lineEditDays.textChanged.connect(self.updateSelectedLine)
+        self.lineEditFrom.textChanged.connect(self.updateSelectedLine)
+        self.lineEditTo.textChanged.connect(self.updateSelectedLine)
+
+    def updateSelectedLine(self):
+        sender = self.sender()
+        if sender.objectName() == "lineEditDays":
+            self.selected_days = sender.text()
+        elif sender.objectName() == "lineEditFrom":
+            self.selected_minprice = sender.text()
+        elif sender.objectName() == "lineEditTo":
+            self.selected_maxprice = sender.text()
+
+    def updateSelectedCombo(self):
+        sender = self.sender()
+        if sender.objectName() == "cbxCity":
+            self.selected_city = sender.currentText()
+        elif sender.objectName() == "cbxRoomtype":
+            self.selected_roomtype = sender.currentText()
+        elif sender.objectName() == "cbxAmenities":
+            self.selected_amenities = sender.currentText()
+
+
     def openSearchResults(self):
-        print(f"Opening search results for city: {self.selected_city}")
-        city=self.selected_city
-        roomtype=self.selected_roomtype
-        amenities=self.selected_amenities
-        print(city)
-        print(roomtype)
-        print(amenities)
+        city = self.selected_city
+        room_type = self.selected_roomtype
+        amenities = self.selected_amenities
+        days = int(self.selected_days)
+        price_from = int(self.selected_minprice)
+        price_to = int(self.selected_maxprice)
 
-        ct = FilterRecommender("airbnb_data.db")
-        result = ct.city_based(self.selected_city)
-        print(f"FilterRecommender result: {result}")
-
-        window = QMainWindow()
         self.chartUI = SearchResultsEx()
-        self.chartUI.setupUi(window)
-        window.show()
+        self.chartUI.show()
+
+
+
+

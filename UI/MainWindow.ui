@@ -191,6 +191,11 @@
     </item>
     <item>
      <property name="text">
+      <string>Smoke Alarm</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
       <string>Air conditioning</string>
      </property>
     </item>
@@ -261,6 +266,31 @@
     <item>
      <property name="text">
       <string>Washington DC</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Seattle</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Chicago</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Texas</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Boston</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>San Diego</string>
      </property>
     </item>
     <item>

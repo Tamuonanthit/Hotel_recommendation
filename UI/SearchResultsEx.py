@@ -2,12 +2,11 @@ from PyQt6.QtWidgets import QMainWindow, QTableWidgetItem
 from PyQt6.QtSql import QSqlQuery
 from SearchResults import Ui_MainWindow
 
+from Filter_based import FilterRecommender
+from Content_based import ContentRecommender
 
 class SearchResultsEx(QMainWindow, Ui_MainWindow):
     def __init__(self):
-
-    # def __init__(self, db, city, room_type, amenities, price_from, price_to):
-
         super().__init__()
         self.setupUi(self)
         self.pushButtonBack.clicked.connect(self.close)
@@ -18,7 +17,6 @@ class SearchResultsEx(QMainWindow, Ui_MainWindow):
         # self.amenities = amenities
         # self.price_from = price_from
         # self.price_to = price_to
-
         # self.populateResults()
 
     def showDataIntoTableWidget(self, df):
@@ -36,5 +34,6 @@ class SearchResultsEx(QMainWindow, Ui_MainWindow):
                 self.tableWidget.setItem(row, j, QTableWidgetItem(str(data)))
                 j = j + 1
             row = row + 1
+
 
 
