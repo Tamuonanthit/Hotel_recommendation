@@ -84,19 +84,3 @@ class ContentRecommender:
         else:
             print('No hotels available with specified criteria')
             return pd.DataFrame()
-database='airbnb_data.db'
-ct = ContentRecommender(database)
-recommendation_func = ct.recommend_by_amenities_topic()
-
-# Get recommendations for a specific hotel
-recommended_hotels = recommendation_func(93551) #input id airbnb
-
-# Display recommended hotels
-print(recommended_hotels)
-city='Washington DC'
-roomtype='Private room'
-min_price=10
-max_price=50
-days=3
-test=ct.recommend(city,roomtype,min_price,max_price,days)
-print(test)

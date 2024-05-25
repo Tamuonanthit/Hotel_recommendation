@@ -137,7 +137,7 @@ class FilterRecommender:
         # Get hotel data
         data_hotel = self.get_data_hotel()
         data_hotel['minimum_nights'] = pd.to_numeric(data_hotel['minimum_nights'], errors='coerce')
-        days_filtered_hotels = data_hotel[data_hotel['minimum_nights'] >= days]
+        days_filtered_hotels = data_hotel[data_hotel['minimum_nights'] <= days]
 
         # Sort filtered hotels by price
         days_filtered_hotels_sorted = days_filtered_hotels.sort_values(by='review_scores_rating', ascending=False)
