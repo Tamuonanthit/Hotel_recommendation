@@ -13,7 +13,7 @@ import ast
 class FilterRecommender:
     def __init__(self, database):
         self.database = database
-        pass
+        
 
     def query(self, sql):
         try:
@@ -209,6 +209,48 @@ class FilterRecommender:
                 ['name', 'review_scores_rating', 'room_type', 'amenities', 'minimum_nights', 'listing_url', 'price',
                  'distance']]
             return hname.head()
+        else:
+            print('No hotels available')
+            return pd.DataFrame()
+
+    def filter_by_all(self, city, roomtype, amenities, minprice, maxprice, days):
+        data_hotel = self.get_data_hotel()
+        city = city.lower()
+        roomtype = roomtype.lower()
+        amenities = [amenity.lower() for amenity in amenities]
+        data_hotel['city'] = data_hotel['city'].str.lower()
+        data_hotel['room_type'] = data_hotel['room_type'].str.lower()
+
+        data_hotel['price'] = data_hotel['price'].replace('[\$,]', '', regex=True)
+        data_hotel['price'] = pd.to_numeric(data_hotel['price'], errors='coerce')
+        data_hotel['minimum_nights'] = pd.to_numeric(data_hotel['minimum_nights'], errors='coerce')
+        # Filter by price range
+
+        price_filtered = data_hotel[(data_hotel['price'] >= minprice) & (data_hotel['price'] <= maxprice)]
+
+        # Filter by the number of days
+        days_filtered = price_filtered[price_filtered['minimum_nights'] <= days]
+
+        # Filter by city
+        city_filtered = days_filtered[days_filtered['city'].str.lower() == city]
+
+        # Filter by room type
+        roomtype_filtered = city_filtered[city_filtered['room_type'].str.lower() == roomtype]
+
+        # Filter by amenities
+        amenities_filtered = roomtype_filtered[
+            roomtype_filtered['amenities'].apply(lambda x: set(amenities).issubset(x))]
+
+        # Sort by review scores rating
+        sorted_hotels = amenities_filtered.sort_values(by='review_scores_rating', ascending=False)
+
+        # Remove duplicates based on listing_id
+        unique_hotels = sorted_hotels.drop_duplicates(subset='listing_id', keep='first')
+
+        # Return the filtered hotels
+        if not unique_hotels.empty:
+            return unique_hotels[['listing_id', 'city', 'name', 'review_scores_rating', 'room_type', 'amenities', 'minimum_nights',
+                 'listing_url', 'price']]
         else:
             print('No hotels available')
             return pd.DataFrame()
